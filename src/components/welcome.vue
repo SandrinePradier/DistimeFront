@@ -39,6 +39,7 @@ export default {
     getStatus(){
       http.get('/')
       .then((response) => {
+        console.log('calling backend');
         return this.batchs = response.data.data;
       })
       .then((batchs) => {
@@ -72,8 +73,11 @@ export default {
       http.get(`/${batchName}`)
       .then((response)=>{
         console.log(response);
-        this.getStatus();
+        this.keepAskingServer();
       })
+    },
+    keepAskingServer(){
+       setInterval(this.getStatus(), 5000);
     }
   }
 };
