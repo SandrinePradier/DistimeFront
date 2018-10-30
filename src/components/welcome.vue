@@ -20,8 +20,10 @@ import http from './../helpers/http.js';
 
 export default {
   name: 'welcome',
-  mounted(){
-    this.getStatus()
+  created(){
+    this.getStatus();
+    this.timer = setInterval(this.getStatus, 900000);
+    //900000 = 15min
   },
   data () {
     return {
@@ -33,6 +35,7 @@ export default {
       ],
       batchs:[],
       id:'',
+      timer:''
     }
   },
   methods:{
@@ -73,13 +76,16 @@ export default {
       http.get(`/${batchName}`)
       .then((response)=>{
         console.log(response);
-        this.keepAskingServer();
+        this.getStatus();
       })
     },
-    keepAskingServer(){
-       setInterval(this.getStatus(), 5000);
+    cancelAutoUpdate(){
+      clearInterval(this.timer);
     }
-  }
+  },
+  beforeDestroy() {
+  clearInterval(this.timer)
+}
 };
 </script>
 
